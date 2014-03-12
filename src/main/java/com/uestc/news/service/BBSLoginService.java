@@ -47,7 +47,6 @@ public class BBSLoginService {
 		String url = Config.getLoginUrl();
 		String result = httpUtils.get(url);
 		String rand = getByReg(result, "rand[A-Za-z0-9_= ']+").substring(5);
-
 		if (rand != null) {
 			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 			nvps.add(new BasicNameValuePair("username", Config.getProperties("username")));
@@ -114,22 +113,18 @@ public class BBSLoginService {
 		postsNvps.add(new BasicNameValuePair("atc_title", title));
 		postsNvps.add(new BasicNameValuePair("atc_content", content.toString()));
 
-		postsNvps.add(new BasicNameValuePair("p_type", "1"));
-		postsNvps.add(new BasicNameValuePair("atc_autourl", "1"));
-		postsNvps.add(new BasicNameValuePair("atc_usesign", "1"));
-		postsNvps.add(new BasicNameValuePair("atc_convert", "1"));
-		postsNvps.add(new BasicNameValuePair("atc_rvrc", "0"));
-		postsNvps.add(new BasicNameValuePair("atc_enhidetype", "rvrc"));
-		postsNvps.add(new BasicNameValuePair("atc_money", "0"));
-		postsNvps.add(new BasicNameValuePair("atc_credittype", "money"));
-		postsNvps.add(new BasicNameValuePair("att_special1", "0"));
-		postsNvps.add(new BasicNameValuePair("att_ctype1", "money"));
-		postsNvps.add(new BasicNameValuePair("atc_needrvrc1", "0"));
-		postsNvps.add(new BasicNameValuePair("step", "2"));
-		postsNvps.add(new BasicNameValuePair("action", "new"));
-		postsNvps.add(new BasicNameValuePair("fid", "25"));
-		postsNvps.add(new BasicNameValuePair("article", "0"));
-		postsNvps.add(new BasicNameValuePair("special", "0"));
+		postsNvps.add(new BasicNameValuePair("formhash", "f78510c5"));
+		postsNvps.add(new BasicNameValuePair("posttime", "1389583185"));
+		postsNvps.add(new BasicNameValuePair("wysiwyg", "1"));
+		postsNvps.add(new BasicNameValuePair("typeid", "761"));
+		postsNvps.add(new BasicNameValuePair("subject", "ccccccccccccccccccc"));
+		postsNvps.add(new BasicNameValuePair("message", "dddddddddddddddddd%0D%0A"));
+		postsNvps.add(new BasicNameValuePair("price", ""));
+		postsNvps.add(new BasicNameValuePair("allownoticeauthor", "1"));
+		postsNvps.add(new BasicNameValuePair("usesig", "1"));
+		postsNvps.add(new BasicNameValuePair("save", ""));
+		postsNvps.add(new BasicNameValuePair("uploadalbum", "-2"));
+		postsNvps.add(new BasicNameValuePair("newalbum", "%E8%AF%B7%E8%BE%93%E5%85%A5%E7%9B%B8%E5%86%8C%E5%90%8D%E7%A7%B0"));
 
 		httpUtils.post(Config.getPostUrl(), postsNvps, "gb2312");
 		logger.info("发布帖子成功,发布时间：" + new Date() + " title=" + title);

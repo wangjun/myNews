@@ -2,6 +2,7 @@ package com.uestc.news.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -96,10 +97,14 @@ public class HexunNewsEngine {
 			}
 			channel.setItem(newsList);
 			// newsService.saveNewsByChannel(channel);
+		} catch (SocketTimeoutException e) {
+			logger.info("哦哦，出错了SocketTimeoutException", e);
 		} catch (IOException e) {
 			logger.info("哦哦，出错了", e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.info("哦哦，里面数据有越界");
+			logger.info("哦哦，里面数据有越界", e);
+		} catch (Exception e) {
+			logger.info("哦哦，有异常啊Exception", e);
 		}
 	}
 

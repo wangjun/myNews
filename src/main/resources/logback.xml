@@ -12,7 +12,10 @@
 	<appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>logs/mynews-logback.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>logs/mynews-logback.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>logs/mynews_logback.%d{yyyy-MM-dd_HH}.%i.log.zip</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>300KB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
 		</rollingPolicy>
 		<encoder>
 			<charset>UTF-8</charset>
@@ -20,21 +23,6 @@
 		</encoder>
 	</appender>
 	
-	<appender name="businessLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<!-- 按每小时滚动文件，如果一个小时内达到10M也会滚动文件, 滚动文件将会压缩成zip格式 -->
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>logs/business-%d{yyyy-MM-dd_HH}.%i.zip</fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>10MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
-		</rollingPolicy>
-		<!-- 独立的pattern -->
-		<encoder>
-			<charset>UTF-8</charset>
-			<pattern>%d{HH:mm:ss.SSS},%msg%n</pattern>
-		</encoder>
-	</appender>
-
 	<!-- project default level -->
 	<logger name="com.uestc.news.service" level="INFO" />
 	

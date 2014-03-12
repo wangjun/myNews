@@ -121,6 +121,8 @@ public class Engine extends Thread {
 		this.parseRss("http://feeds.geekpark.net/", "geekpark");
 		this.getZhihu("http://www.zhihu.com/reader/json/1", "知乎");
 		this.parseRss("http://tech2ipo.com/feed", "TECH2IPO创见");
+		
+		this.parseRss("http://www.kuailiyu.com/feed/", "快鲤鱼");
 
 //		this.parseRss("http://feed.feedsky.com/programmer", "程序员杂志");
 		this.parseRss("http://feed.yixieshi.com/", "互联网的一些事");
