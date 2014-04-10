@@ -34,14 +34,11 @@ public class SpringCronJob implements Runnable {
 	@PostConstruct
 	public void start() {
 		Validate.notBlank(cronExpression);
-
 		threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
 		threadPoolTaskScheduler.setThreadNamePrefix("SpringCronJob");
 		threadPoolTaskScheduler.initialize();
-
 		threadPoolTaskScheduler.schedule(this, new CronTrigger(cronExpression));
-
-		logger.info("测试开始了，crontab");
+		logger.info("[自动抓取新闻服务开始]");
 	}
 
 	@PreDestroy

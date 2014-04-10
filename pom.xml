@@ -19,7 +19,6 @@
 		<hibernate-validator.version>4.3.0.Final</hibernate-validator.version>
 		<jackson.version>2.1.2</jackson.version>
 		<slf4j.version>1.7.2</slf4j.version>
-		<log4j.version>1.2.17</log4j.version>
 		<commons-lang3.version>3.1</commons-lang3.version>
 		<guava.version>13.0.1</guava.version>
 		<joda-time.version>2.1</joda-time.version>
@@ -427,9 +426,9 @@
 			<version>2.2.0</version>
 		</dependency>
 		<dependency>
-		  <groupId>org.jsoup</groupId>
-		  <artifactId>jsoup</artifactId>
-		  <version>1.6.3</version>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.7.2</version>
 		</dependency>
 	</dependencies>
 	

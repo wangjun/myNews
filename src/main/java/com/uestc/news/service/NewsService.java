@@ -68,7 +68,7 @@ public class NewsService {
 			News tempNews = findByHash(n.getHash());
 			if (tempNews == null) {
 				this.saveNews(n);
-				logger.info("新添加一条新闻，标题：" + n.getTitle() + "链接：" + n.getLink());
+				logger.info("[新添加一条新闻][标题：" + n.getTitle() + "][链接：" + n.getLink() + "]");
 			} else {
 				continue;
 			}
@@ -123,12 +123,13 @@ public class NewsService {
 		Sort sort = new Sort(Direction.DESC, "id");
 		SearchFilter filter = new SearchFilter(News._SynQshp, Operator.EQ, false);
 		SearchFilter filter2 = new SearchFilter(News._Source, Operator.EQ, "知乎");
-		List<News> news = newsDao.findAll(DynamicSpecifications.bySearchFilter(Lists.newArrayList(filter,filter2), News.class), sort);
+		List<News> news = newsDao.findAll(DynamicSpecifications.bySearchFilter(Lists.newArrayList(filter, filter2), News.class), sort);
 		return news;
 	}
 
 	/**
 	 * 返回最新没有同步到weibo上的新闻
+	 * 
 	 * @return
 	 */
 	public News getNewsMaxId() {

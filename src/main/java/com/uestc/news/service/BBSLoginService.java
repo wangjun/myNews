@@ -68,7 +68,7 @@ public class BBSLoginService {
 
 	private String isLogin(HttpUtils httpUtils) throws Exception {
 		String verify = null;
-		String aaa = httpUtils.get(Config.getModelUrl(), "gb2312");
+		String aaa = httpUtils.get(Config.getModelUrl());
 		verify = getByReg(aaa, "verifyhash[A-Za-z0-9_= ']+");
 		verify = verify.substring(14, 22);// verifyhash = 'e9f78bb2'
 		String name = getByReg(aaa, Config.getProperties("username"));

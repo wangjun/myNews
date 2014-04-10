@@ -95,6 +95,5 @@
 	<div align="center">
 		<tags:pagination page="${newsList}" paginationSize="5"/>
 	</div>
-	<div><a class="btn" href="${ctx}/news/create">创建任务</a></div>
 </body>
 </html>

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import com.uestc.news.entity.Channel;
 import com.uestc.news.entity.News;
+import com.uestc.news.utils.HttpUtils;
 import com.uestc.news.utils.JPDateUtils;
 import com.uestc.news.utils.MD5;
 
@@ -36,7 +37,9 @@ public class HexunNewsEngine {
 
 		Document doc;
 		try {
-			doc = Jsoup.connect(rssUrl).get();
+			HttpUtils httpUtils = new HttpUtils();
+			String html = httpUtils.get(rssUrl);
+			doc = Jsoup.parse(html);
 			Element element = doc.getElementById("Form1");
 			String catalog = doc.getElementsByClass("sheisse").get(0).html();// 获取rss分类信息
 			catalog = Jsoup.clean(catalog, Whitelist.none());
@@ -49,12 +52,14 @@ public class HexunNewsEngine {
 														// link addres
 				String title = tem.get(0).html();// get rss list's item link
 													// content
-				doc = Jsoup.connect("http://rss.hexun.com" + href).get();
+				html = httpUtils.get("http://rss.hexun.com" + href);
+				doc = Jsoup.parse(html);
 				String frame = doc.getElementById("bottomFrame").attr("src");// Frame框架的中间正文部分链接
 				String link = "http://rss.hexun.com" + frame;
 				link = getFrameUrl(Jsoup.connect(link).get().html());
 				logger.info("即将抓取页面：" + link);
-				doc = Jsoup.connect(link).get();
+				html = httpUtils.get(link);
+				doc = Jsoup.parse(html);
 				String content = doc.getElementById("artibody").html();
 				Element desc = doc.getElementById("artibodyDesc");
 				content = Jsoup.clean(content, Whitelist.basic());

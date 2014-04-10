@@ -19,6 +19,7 @@ import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
 import com.uestc.news.entity.Channel;
 import com.uestc.news.entity.News;
+import com.uestc.news.utils.HttpUtils;
 import com.uestc.news.utils.MD5;
 
 @Component
@@ -35,11 +36,11 @@ public class HuxiuService {
 	private void _parseRss(String rss, String source) {
 		Channel channel = new Channel();
 		List<News> newsList = new ArrayList<News>();
+		XmlReader reader = null;
 		try {
 			URL url = new URL(rss);
-			XmlReader reader = new XmlReader(url);// 读取Rss源
+			reader = new XmlReader(url);// 读取Rss源
 			logger.info("[url=" + rss + "][Rss源的编码格式为：" + reader.getEncoding() + "]");
-			logger.info("正在抓取" + channel.getTitle() + channel.getLink() + new Date());
 			SyndFeedInput input = new SyndFeedInput();
 			SyndFeed feed = input.build(reader);// 得到SyndFeed对象，即得到Rss源里的所有信息
 
@@ -48,6 +49,7 @@ public class HuxiuService {
 			channel.setLink(feed.getLink());
 			channel.setTitle(feed.getTitle());
 
+			logger.info("正在抓取" + channel.getTitle() + channel.getLink() + new Date());
 			// 得到Rss新闻中子项列表
 			List entries = feed.getEntries();
 			for (int i = 0; i < feed.getEntries().size(); i++) {
@@ -81,6 +83,14 @@ public class HuxiuService {
 			logger.info("抓取完毕");
 		} catch (Exception e) {
 			logger.info("出错啦，抓取地址：" + rss, e);
+		} finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -88,9 +98,9 @@ public class HuxiuService {
 		News news = new News();
 		try {
 			logger.info("正在抓取" + contentUrl);
-			Document doc = Jsoup.connect(contentUrl)
-					.userAgent("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36").get();
-
+			HttpUtils httpUtils = new HttpUtils();
+			String html = httpUtils.get(contentUrl);
+			Document doc = Jsoup.parse(html);
 			String content = doc.getElementById("neirong_box").html();
 			String author = doc.getElementsByClass("recommenders").get(0).text();
 			news.setDescription(content);
