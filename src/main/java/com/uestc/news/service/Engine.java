@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -30,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.xml.sax.InputSource;
 
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -64,18 +66,22 @@ public class Engine extends Thread {
 		Channel channel = new Channel();
 		List<News> newsList = new ArrayList<News>();
 		long start = System.currentTimeMillis();
-		XmlReader reader = null;
-		URLConnection urlConnection = null;
+		SyndFeed feed = null;
+		InputStream is = null;
 		try {
-			urlConnection = new URL(rss).openConnection();
-			urlConnection.setRequestProperty("User-Agent", Config.getUserAgent());
-			urlConnection.setConnectTimeout(10000);
+			URLConnection openConnection = new URL(rss).openConnection();
+			openConnection.setRequestProperty("User-Agent", Config.getUserAgent());
+			openConnection.setConnectTimeout(10000);
 
-			reader = new XmlReader(urlConnection);// 读取Rss源
+			is = new URL(rss).openConnection().getInputStream();
+			if ("gzip".equals(openConnection.getContentEncoding())) {
+				is = new GZIPInputStream(is);
+			}
+			InputSource inputSource = new InputSource(is);
 			SyndFeedInput input = new SyndFeedInput();
+			feed = input.build(inputSource);
 
-			SyndFeed feed = input.build(reader);// 得到SyndFeed对象，即得到Rss源里的所有信息
-			logger.info("[正在抓取][" + feed.getTitle() + "][url=" + rss + "][Rss源的编码格式为：" + reader.getEncoding() + "]");
+			logger.info("[正在抓取][" + feed.getTitle() + "][url=" + rss + "]");
 
 			channel.setDescription(feed.getDescription());
 			channel.setLanguage(feed.getLanguage());
@@ -132,10 +138,8 @@ public class Engine extends Thread {
 			logger.info("抓取地址：" + rss + "来源：" + source, e);
 		} finally {
 			try {
-				if (reader != null) {
-					reader.close();
-				}
-				urlConnection = null;
+				if (is != null)
+					is.close();
 				logger.info("[抓取结束][耗时:" + (System.currentTimeMillis() - start) + "ms][" + channel.getTitle() + "][" + channel.getLink() + "]");
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -144,7 +148,6 @@ public class Engine extends Thread {
 	}
 
 	public void enginStart() {
-
 		this.getTianXiaWangShang("http://i.wshang.com/Post/Default/Rss.html", "天下网商");
 		this.getZhihu("http://www.zhihu.com/reader/json/1", "知乎");
 
@@ -174,7 +177,6 @@ public class Engine extends Thread {
 	 * 使用HttpClient取得内容.
 	 */
 	public void getZhihu(String contentUrl, String source) {
-
 		HttpClient httpClient = null;
 		PoolingClientConnectionManager cm = new PoolingClientConnectionManager();
 		cm.setMaxTotal(CONNECTION_POOL_SIZE);
